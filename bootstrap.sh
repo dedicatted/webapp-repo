@@ -34,7 +34,7 @@ dbserver_public_ip="$(aws ec2 describe-instances --instance-ids ${dbserver_insta
 
 # Wait for instances launch
 echo -e "${GREEN}Waiting for instances launch...${NC}"
-sleep 1m
+sleep 2m
 
 # Bootstrap chef-client on both instances
 echo -e "${GREEN}Bootstrap chef-clients...${NC}"
@@ -43,9 +43,9 @@ knife bootstrap ${dbserver_public_ip} --ssh-user ubuntu --sudo --node-name dbser
 
 # Copy encrypted_data_bag_secret to nodes /etc/chef directory
 echo -e "${GREEN}Copy encrypted_data_bag_secret...${NC}"
-scp -q -i ~/${key_file_name}.pem .chef/encrypted_data_bag_secret ubuntu@${webserver_public_ip}:~/
+scp -q -o StrictHostKeyChecking=no -i ~/${key_file_name}.pem .chef/encrypted_data_bag_secret ubuntu@${webserver_public_ip}:~/
 ssh -i ~/${key_file_name}.pem ubuntu@${webserver_public_ip} "sudo mv ~/encrypted_data_bag_secret /etc/chef/encrypted_data_bag_secret"
-scp -q -i ~/${key_file_name}.pem .chef/encrypted_data_bag_secret ubuntu@${dbserver_public_ip}:~/
+scp -q -o StrictHostKeyChecking=no -i ~/${key_file_name}.pem .chef/encrypted_data_bag_secret ubuntu@${dbserver_public_ip}:~/
 ssh -i ~/${key_file_name}.pem ubuntu@${dbserver_public_ip} "sudo mv ~/encrypted_data_bag_secret /etc/chef/encrypted_data_bag_secret"
 
 # Update nodes run lists
@@ -55,7 +55,7 @@ knife node run_list add dbserver 'recipe[webapp::database]'
 
 # Run chef-clients
 echo -e "${GREEN}Run chef-clients...${NC}"
-ssh -i ~/${key_file_name}.pem ubuntu@${dbserver_public_ip} "sudo chef-client"
-ssh -i ~/${key_file_name}.pem ubuntu@${webserver_public_ip} "sudo chef-client"
+ssh -o StrictHostKeyChecking=no -i ~/${key_file_name}.pem ubuntu@${dbserver_public_ip} "sudo chef-client"
+ssh -o StrictHostKeyChecking=no -i ~/${key_file_name}.pem ubuntu@${webserver_public_ip} "sudo chef-client"
 
 echo -e "${GREEN}Building complete!${NC}"
