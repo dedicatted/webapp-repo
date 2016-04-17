@@ -66,6 +66,21 @@ knife data bag from file db users.json --secret-file .chef/encrypted_data_bag_se
 knife data bag edit db users --secret-file .chef/encrypted_data_bag_secret --editor=vi
 ```
 
+### Install cookbooks dependencies to your workstation
+```bash
+berks install
+```
+
+### Upload cookbooks dependencies to your Chef server
+```bash
+berks upload
+```
+
+### Upload webapp cookbook to your Chef server
+```bash
+knife cookbook upload webapp
+```
+
 ### If your AWS region is not 'us-east-1', replace the ami_image_id value with the correct one for your region in the bootstrap.sh file (line 6)
 
 ### Run bootstrap.sh
