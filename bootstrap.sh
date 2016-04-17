@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
 
+# AMI image id that will be used to create instances
+# Replace with the correct id for your AWS region
+# (this example uses id from us-east-1)
+ami_image_id="ami-f95ef58a"
+
 # Variables
 webserver_sg_name="webserver-sg"
 dbserver_sg_name="dbserver-sg"
@@ -27,8 +32,8 @@ fi
 
 # Create ec2 instances
 echo -e "${GREEN}Creating aws ec2 instances...${NC}"
-webserver_instance_id="$(aws ec2 run-instances --image-id ami-f95ef58a --security-group-ids ${webserver_sg_id} --count 1 --instance-type t2.micro --key-name ${key_file_name} --query 'Instances[0].InstanceId' --output text)"
-dbserver_instance_id="$(aws ec2 run-instances --image-id ami-f95ef58a --security-group-ids ${dbserver_sg_id} --count 1 --instance-type t2.micro --key-name ${key_file_name} --query 'Instances[0].InstanceId' --output text)"
+webserver_instance_id="$(aws ec2 run-instances --image-id ${ami_image_id} --security-group-ids ${webserver_sg_id} --count 1 --instance-type t2.micro --key-name ${key_file_name} --query 'Instances[0].InstanceId' --output text)"
+dbserver_instance_id="$(aws ec2 run-instances --image-id ${ami_image_id} --security-group-ids ${dbserver_sg_id} --count 1 --instance-type t2.micro --key-name ${key_file_name} --query 'Instances[0].InstanceId' --output text)"
 webserver_public_ip="$(aws ec2 describe-instances --instance-ids ${webserver_instance_id} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)"
 dbserver_public_ip="$(aws ec2 describe-instances --instance-ids ${dbserver_instance_id} --query 'Reservations[0].Instances[0].PublicIpAddress' --output text)"
 
