@@ -3,7 +3,7 @@
 # AMI image id that will be used to create instances
 # Replace with the correct id for your AWS region
 # (this example uses id from us-east-1)
-ami_image_id="ami-f95ef58a"
+ami_image_id="ami-fce3c696"
 
 # Variables
 webserver_sg_name="webserver-sg"
